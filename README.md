@@ -7,6 +7,8 @@ This is a utility to make the implementation of omniture easier.
 Basic Usage
 ---------------
 
+Tutorial: http://tmspreview.com/tmslibrary/tutorial/
+
 *1) Include the library js file, analytics library, and omniture s_code.js.*
 
   [script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
