@@ -16,19 +16,19 @@ Create Packages
 
 **********************************************************/
 
-if (typeof $global.ssla == "undefined") {
-  $global.ssla = {};
+if (typeof $global.mry == "undefined") {
+  $global.mry = {};
 }
 
-// ssla
-// ssla.analytics
-// ssla.net
-// ssla.analytics.omniture
+// mry
+// mry.analytics
+// mry.net
+// mry.analytics.omniture
 
-var ssla = $global.ssla;
-ssla.net = ssla.net ? ssla.net : {};
-ssla.analytics = ssla.analytics ? ssla.analytics : {};
-ssla.analytics.omniture = ssla.analytics.omniture ? ssla.analytics.omniture : {};
+var mry = $global.mry;
+mry.net = mry.net ? mry.net : {};
+mry.analytics = mry.analytics ? mry.analytics : {};
+mry.analytics.omniture = mry.analytics.omniture ? mry.analytics.omniture : {};
 
 
 /*********************************************************
@@ -38,14 +38,14 @@ NetInfo
 **********************************************************/
 
 
-ssla.net.NetInfo = {}
+mry.net.NetInfo = {}
 
 /**
 * Retrieve the current host. This can be used to set the reporting
 * account to use.
 * @return String - Host portion of url.
 */
-ssla.net.NetInfo.getUrl = function()
+mry.net.NetInfo.getUrl = function()
 {
     return document.domain;
 }
@@ -54,7 +54,7 @@ ssla.net.NetInfo.getUrl = function()
 * Retrieve hash postion of url.
 * @return String
 */
-ssla.net.NetInfo.getHash = function()
+mry.net.NetInfo.getHash = function()
 {
     return window.location.hash;
 }
@@ -63,7 +63,7 @@ ssla.net.NetInfo.getHash = function()
 * Retrieve "siteid" variable from query string.
 * @return
 */
-ssla.net.NetInfo.getSiteId = function()
+mry.net.NetInfo.getSiteId = function()
 {
     var id;
     var query = window.location.search;
@@ -71,7 +71,7 @@ ssla.net.NetInfo.getSiteId = function()
     if (query == null || query == "" ) {
         id = "";
     } else {
-        id = ssla.net.NetInfo.getQueryVariable(query, "siteid");
+        id = mry.net.NetInfo.getQueryVariable(query, "siteid");
     }
     return id;
 }
@@ -79,7 +79,7 @@ ssla.net.NetInfo.getSiteId = function()
 /**
  * Retrieve a variable from the query string.
  */
-ssla.net.NetInfo.getQueryVariable = function($query,$varName)
+mry.net.NetInfo.getQueryVariable = function($query,$varName)
 {
     $query = $query.substring(1);
     var vars = $query.split("&");
@@ -97,7 +97,7 @@ ssla.net.NetInfo.getQueryVariable = function($query,$varName)
 Accounts
 
 **********************************************************/
-ssla.analytics.omniture.Accounts = function($arr){
+mry.analytics.omniture.Accounts = function($arr){
 	this._data = [];
 	this._count = 0;
 	if($arr instanceof Array){
@@ -113,35 +113,31 @@ ssla.analytics.omniture.Accounts = function($arr){
 	}
 }
 
-ssla.analytics.omniture.Accounts.prototype.next = function(){
+mry.analytics.omniture.Accounts.prototype.next = function(){
 	var o = this._data[this._count];
 	this._count++;
 	return o;
 }
 
-ssla.analytics.omniture.Accounts.prototype.hasNext = function(){
+mry.analytics.omniture.Accounts.prototype.hasNext = function(){
 	if(this._count < this._data.length){
 		return true;
 	} 
 	return false;
 }
 
-ssla.analytics.omniture.Accounts.prototype.addAccount = function($accountName,$address){
-	this._data.push(new ssla.analytics.omniture.Account($accountName,$address));
+mry.analytics.omniture.Accounts.prototype.addAccount = function($accountName,$address){
+	this._data.push(new mry.analytics.omniture.Account($accountName,$address));
 }
 
 /**
 * Static method to get account to be tracked to.
-* @param $accounts - Accounts object if null it is assumed the project will live on 
-* t.com
 */
-ssla.analytics.omniture.Accounts.prototype.getAccount = function()
+mry.analytics.omniture.Accounts.prototype.getAccount = function()
 {
   var account;
-  var host = ssla.net.NetInfo.getUrl();
-	if(!this._data.length){
-		account = host.match(/((staging|devcpd\d|dev)\.toyota)\.com$|localhost|tmspreview.com/i) ? "devtoyota" :"tmstoyota";
-	} else {
+  var host = mry.net.NetInfo.getUrl();
+
 		while(this.hasNext()){
 			var a = this.next();
 			var regex = new RegExp(a.address,"i");
@@ -150,7 +146,7 @@ ssla.analytics.omniture.Accounts.prototype.getAccount = function()
 				break;
 			}
 		}
-	}
+
   return account;
 }
 
@@ -159,7 +155,7 @@ ssla.analytics.omniture.Accounts.prototype.getAccount = function()
 Account
 
 **********************************************************/
-ssla.analytics.omniture.Account = function($account,$address){
+mry.analytics.omniture.Account = function($account,$address){
 	this.account = $account;
 	this.address = $address;
 }
@@ -176,20 +172,20 @@ Tracker
 @param $library - library object
 @param $s - omniture s_code object 
 */
-ssla.analytics.Omniture = function($library,$s){
+mry.analytics.Omniture = function($library,$s){
 	// on objects containing key value pairs of object to be sent to omniture
 	this.library = $library;
 	this.s = $s;
-	this.s.campaign = ssla.net.NetInfo.getSiteId();
+	this.s.campaign = mry.net.NetInfo.getSiteId();
 }
 
-ssla.analytics.Omniture.prototype.constructor = ssla.analytics.Omniture;
+mry.analytics.Omniture.prototype.constructor = mry.analytics.Omniture;
 
 
 /** 
 Clear the s_code object. 
 */
-ssla.analytics.Omniture.prototype.clear = function()
+mry.analytics.Omniture.prototype.clear = function()
 {
 	for (var i = 1; i <= 75; i++) {
         this.s['prop' + i] = "";
@@ -209,7 +205,7 @@ ssla.analytics.Omniture.prototype.clear = function()
 /**
 * Send object from library based upon its library id
 */
-ssla.analytics.Omniture.prototype.sendId = function($id){
+mry.analytics.Omniture.prototype.sendId = function($id){
 	try {
 		var obj = this.getItem($id);
 	} catch($e){
@@ -222,7 +218,7 @@ ssla.analytics.Omniture.prototype.sendId = function($id){
 /**
 * Retrieve item from item array
 */ 
-ssla.analytics.Omniture.prototype.getItem = function($id){
+mry.analytics.Omniture.prototype.getItem = function($id){
 	 
 	 var obj = this.library[$id];
 	 if(obj == undefined){
@@ -241,7 +237,7 @@ ssla.analytics.Omniture.prototype.getItem = function($id){
  * Send a library object to Omniture.
  * @param $obj - object to send
  */
-ssla.analytics.Omniture.prototype.send = function($obj)
+mry.analytics.Omniture.prototype.send = function($obj)
 {
 	this.clear();
 	var func = this._getJSFunction($obj);
@@ -271,7 +267,7 @@ ssla.analytics.Omniture.prototype.send = function($obj)
  * @return Function
  * @private
  */
-ssla.analytics.Omniture.prototype._getJSFunction=function($obj)
+mry.analytics.Omniture.prototype._getJSFunction=function($obj)
 {
 	var func = "";
 	var ltv = ""; // linkTrackVars string
@@ -306,7 +302,7 @@ ssla.analytics.Omniture.prototype._getJSFunction=function($obj)
 * Gets the event method to use.
 */
 
-ssla.analytics.Omniture.prototype._getMethod = function($obj){
+mry.analytics.Omniture.prototype._getMethod = function($obj){
 	var method = "";
 	
 	// get the method
@@ -337,7 +333,7 @@ ssla.analytics.Omniture.prototype._getMethod = function($obj){
 * @private
 * Wraps omniture's track call.
 */
-ssla.analytics.Omniture.prototype._track = function(){
+mry.analytics.Omniture.prototype._track = function(){
 	this.s.t();
 }
 
@@ -348,7 +344,7 @@ ssla.analytics.Omniture.prototype._track = function(){
 * @param $type - tracking link type. usually "o"
 * @param $name - this a string identifying the link
 */
-ssla.analytics.Omniture.prototype._trackLink = function($url, $type, $name)
+mry.analytics.Omniture.prototype._trackLink = function($url, $type, $name)
 {
 	
 	if($url == undefined || $type == undefined || $name == undefined){
@@ -365,7 +361,7 @@ ssla.analytics.Omniture.prototype._trackLink = function($url, $type, $name)
 * @private
 * It automatically creates an Accounts object on the constructor.
 */
-ssla.analytics.Omniture.constructor.accounts = new ssla.analytics.omniture.Accounts();
+mry.analytics.Omniture.constructor.accounts = new mry.analytics.omniture.Accounts();
 
 
 /**
@@ -373,18 +369,18 @@ ssla.analytics.Omniture.constructor.accounts = new ssla.analytics.omniture.Accou
 * @param $account - This is the account suite Toyota requires for a particular host.
 * @param $host - host address that is associate with the account.
 */
-ssla.analytics.Omniture.addAccount = function($account,$host){
-	ssla.analytics.Omniture.constructor.accounts.addAccount($account,$host);
+mry.analytics.Omniture.addAccount = function($account,$host){
+	mry.analytics.Omniture.constructor.accounts.addAccount($account,$host);
 }
 
 /**
 * Returns and account based on defaults or accounds that were added.
 * @return String - Account needed for s_code.
 */
-ssla.analytics.Omniture.getAccount = function(){
-	var a = ssla.analytics.Omniture.constructor.accounts.getAccount();
+mry.analytics.Omniture.getAccount = function(){
+	var a = mry.analytics.Omniture.constructor.accounts.getAccount();
 	// clear accounts.
-	ssla.analytics.Omniture.constructor.accounts = new ssla.analytics.omniture.Accounts();
+	mry.analytics.Omniture.constructor.accounts = new mry.analytics.omniture.Accounts();
 	return a;
 }
 

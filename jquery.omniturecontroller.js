@@ -26,7 +26,7 @@
 			alert("controller init");
 		
 			// instantiate tracker
-			tracker = new ssla.analytics.Omniture(_library,_s);
+			tracker = new mry.analytics.Omniture(_library,_s);
 	
 			// get the page load item and send it
 			var b = $self.find("[data-omni-page]");
