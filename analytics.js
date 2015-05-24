@@ -16,8 +16,8 @@ Create Packages
 
 **********************************************************/
 
-if (typeof $global.mry == "undefined") {
-  $global.mry = {};
+if (typeof $global.ssla == "undefined") {
+  $global.ssla = {};
 }
 
 // mry
@@ -25,7 +25,7 @@ if (typeof $global.mry == "undefined") {
 // mry.net
 // mry.analytics.omniture
 
-var mry = $global.mry;
+var mry = $global.ssla;
 mry.net = mry.net ? mry.net : {};
 mry.analytics = mry.analytics ? mry.analytics : {};
 mry.analytics.omniture = mry.analytics.omniture ? mry.analytics.omniture : {};
@@ -276,15 +276,19 @@ mry.analytics.Omniture.prototype._getJSFunction=function($obj)
 	
 	// attach all the properties
 	for (var i in $obj) {
+
+        if($obj.hasOwnProperty(i)){
+            // skip pev2|name|type|method properties
+            if(!i.match(/(pev2|type|method)/i) && i !== "name"){
+
+                func = func.concat("s.").concat(i).concat("='").concat($obj[i]).concat("';");
+
+                // add all property names for linkTrackVars
+                ltv += i + ",";
+            }
+        }
 		
-		// skip pev2|name|type|method properties 
-		if(!i.match(/(pev2|type|method)/i) && i !== "name"){
-			
-			func = func.concat("s.").concat(i).concat("='").concat($obj[i]).concat("';");
-			
-			// add all property names for linkTrackVars
-			ltv += i + ",";
-		}
+
 	}
 	
 	// create the linkTrackVars string if it's a trackLink event
